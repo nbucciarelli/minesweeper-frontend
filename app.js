@@ -17,8 +17,6 @@ var _ = require('underscore');
 //   return 1;
 // }
 
-var board
-
 function startGame(width, height, mineCount) {
   var gameBoard = setMines(createBoard(width, height, 0), mineCount);
 
@@ -38,15 +36,10 @@ function createBoard(width, height, val) {
 
 function setMines(board, mineCount) {
   console.log(board);
-  _.each(board, function(row) {
-    _.each(row, function(cell){
-      console.log(cell);
-    })
-  })
+
   var height = board.length;
   var width = board[0].length;
-  // I'm not sure why it won't let me change 2d array variables
-  // var flattenedBoard = _.flatten(board)
+
   _.times(mineCount, function(mine) {
     var minePosX = parseInt(Math.random(height) * height);
     var minePosY = parseInt(Math.random(width) * width);
@@ -60,12 +53,7 @@ function setMines(board, mineCount) {
     }
     board[minePosY][minePosX] = 1;
   });
-  console.log(board);
-  _.each(board, function(row) {
-    _.each(row, function(cell){
-      console.log(cell);
-    })
-  })
 
+  console.log(board);
   return board;
 }
