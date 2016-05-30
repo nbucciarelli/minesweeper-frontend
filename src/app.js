@@ -1,26 +1,8 @@
 var _ = require('underscore');
-// var prompt = require('prompt');
-//
-// prompt.start();
-//
-// console.log('What size board would you like?');
-// prompt.get(['Board Width', 'Board Height', 'Mine Count'], function (err, result) {
-//   if (err) { return onErr(err); }
-//   // console.log(result);
-//   // console.log('  Width: ' + result['Board Width']);
-//   // console.log('  Height: ' + result['Board Height']);
-//   startGame(result['Board Width'], result['Board Height'], result['Mine Count']);
-// });
-//
-// function onErr(err) {
-//   console.log(err);
-//   return 1;
-// }
-
+var gameBoard = [];
 
 function startGame(width, height, mineCount) {
-  var gameBoard = setMines(createBoard(width, height, 0), mineCount);
-
+  gameBoard = setMines(createBoard(width, height, 0), mineCount);
 }
 
 function createBoard(width, height, val) {
@@ -36,8 +18,7 @@ function createBoard(width, height, val) {
 }
 
 function setMines(board, mineCount) {
-  console.log(board);
-
+  // console.log(board);
   var height = board.length;
   var width = board[0].length;
 
@@ -48,14 +29,13 @@ function setMines(board, mineCount) {
       minePosX = parseInt(Math.random(height) * height);
       minePosY = parseInt(Math.random(width) * width);
       if(board[minePosY][minePosX] === 0) {
-        console.log("break");
         break;
       }
     }
     board[minePosY][minePosX] = 1;
   });
 
-  console.log(board);
+  // console.log(board);
   return board;
 }
 
@@ -82,7 +62,7 @@ function setDifficulty(difficulty) {
 $("#difficulty").on("change", function() {
   var difficulty = setDifficulty($(this).val());
   startGame(difficulty.boardWidth, difficulty.boardHeight, difficulty.mineCount);
-  console.log("Hi");
+  console.log($(this).val());
 });
 
 import React from "react";
