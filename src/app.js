@@ -17,6 +17,7 @@ var _ = require('underscore');
 //   return 1;
 // }
 
+
 function startGame(width, height, mineCount) {
   var gameBoard = setMines(createBoard(width, height, 0), mineCount);
 
@@ -57,3 +58,40 @@ function setMines(board, mineCount) {
   console.log(board);
   return board;
 }
+
+function setDifficulty(difficulty) {
+  return {
+    'beginner': {
+      'boardWidth': 9,
+      'boardHeight': 9,
+      'mineCount': 10
+    },
+    'intermediate': {
+      'boardWidth': 16,
+      'boardHeight': 16,
+      'mineCount': 40
+    },
+    'advanced': {
+      'boardWidth': 16,
+      'boardHeight': 30,
+      'mineCount': 99
+    }
+  }[difficulty]
+}
+
+$("#difficulty").on("change", function() {
+  var difficulty = setDifficulty($(this).val());
+  startGame(difficulty.boardWidth, difficulty.boardHeight, difficulty.mineCount);
+  console.log("Hi");
+});
+
+import React from "react";
+import ReactDOM from "react-dom";
+
+var HelloMessage = React.createClass({
+  render: function() {
+    return <div>Hello {this.props.name}</div>;
+  }
+});
+
+ReactDOM.render(<HelloMessage name="John" />,  document.getElementById('app'));

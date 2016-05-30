@@ -12,18 +12,34 @@
     <h1>Minesweeper</h1>
     <form>
       <div class="form-group">
-        <label for="width">Width</label>
-        <input type="number" class="form-control" id="boardWidth" placeholder="Width" min="1">
+        <label for="difficulty">Difficulty</label>
+        <select class="form-control" id="difficulty">
+          <option value="beginner">Beginner - 9x9 - 10 Mines</option>
+          <option value="intermediate">Intermediate - 16x16 - 40 Mines</option>
+          <option value="advanced">Advanced - 16x30 - 99 Mines</option>
+        </select>
+      </div>
+
+      <!-- <div class="form-group">
+        <label for="boardWidth">Width</label>
+        <input type="number" class="form-control" id="boardWidth" placeholder="Width" min="1" value="1">
       </div>
       <div class="form-group">
-        <label for="height">Height</label>
-        <input type="number" class="form-control" id="boardHeight" placeholder="Height" min="1">
+        <label for="boardHeight">Height</label>
+        <input type="number" class="form-control" id="boardHeight" placeholder="Height" min="1" value="1">
       </div>
+      <div class="form-group">
+        <label for="mineCount">Height</label>
+        <input type="number" class="form-control" id="mineCount" placeholder="Height" min="1" value="1">
+      </div> -->
     </form>
+   <div id="app">
+   </div>
   </body>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  <script src='app.js'></script>
+  <script src="http://localhost:8080/webpack-dev-server.js"></script>
+  <script src="http://localhost:8080/bin/app.bundle.js"></script>
 </html>
