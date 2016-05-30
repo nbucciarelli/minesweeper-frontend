@@ -59,19 +59,40 @@ function setDifficulty(difficulty) {
   }[difficulty]
 }
 
+import React from "react";
+import ReactDOM from "react-dom";
+import autobind from "autobind-decorator";
+
+@autobind
+class GameBoard extends React.Component {
+  renderCell(cell) {
+    return (
+      <span>X</span>
+    )
+  }
+
+  renderRow(row) {
+    console.log(row);
+    return (
+      <span className="row">{row.map(this.renderCell)}</span>
+    )
+  }
+
+  render() {
+    console.log(gameBoard);
+    return (
+      <div>
+        {gameBoard.map(this.renderRow)}
+      </div>
+    )
+  }
+}
+
 $("#difficulty").on("change", function() {
   var difficulty = setDifficulty($(this).val());
   startGame(difficulty.boardWidth, difficulty.boardHeight, difficulty.mineCount);
   console.log($(this).val());
 });
+$("#difficulty").change();
 
-import React from "react";
-import ReactDOM from "react-dom";
-
-var HelloMessage = React.createClass({
-  render: function() {
-    return <div>Hello {this.props.name}</div>;
-  }
-});
-
-ReactDOM.render(<HelloMessage name="John" />,  document.getElementById('app'));
+ReactDOM.render(<GameBoard />,  document.getElementById('app'));
