@@ -1,0 +1,20 @@
+.hover-cell:hover {
+  background-color: salmon;
+  cursor: pointer;
+}
+
+.cell {
+  display: inline-block;
+  width:20px;
+  height:20px;
+  background-color: gray;
+  border: 1px solid black
+}
+
+.cell-opened {
+  display: inline-block;
+  width:20px;
+  height:20px;
+  background-color: #d3d3d3;
+  border: 1px solid black
+}
