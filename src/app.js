@@ -6,6 +6,7 @@ import autobind from "autobind-decorator";
 
 require("./app.css");
 
+@autobind
 class App extends React.Component {
   constructor() {
     super()
@@ -14,7 +15,7 @@ class App extends React.Component {
   }
 
   setDifficulty(difficulty) {
-    return {
+    var diff = {
       'beginner': {
         'boardWidth': 9,
         'boardHeight': 9,
@@ -30,14 +31,22 @@ class App extends React.Component {
         'boardHeight': 16,
         'mineCount': 99
       }
-    }[difficulty]
+    }[difficulty];
+    this.setState({
+      boardWidth: diff['boardWidth'],
+      boardHeight: diff['boardHeight'],
+      mineCount: diff['mineCount'],
+      difficulty: difficulty
+    })
   }
 
   render() {
     return(
       <div>
         <h1>Minesweeper</h1>
-        <DifficultyForm difficulty={this.state.difficulty}/>
+        <DifficultyForm
+          difficulty={this.state.difficulty}
+          setDifficulty={this.setDifficulty}/>
         <GameBoard
           boardWidth={this.state.boardWidth}
           boardHeight={this.state.mineCount}
@@ -47,15 +56,22 @@ class App extends React.Component {
   }
 }
 
+App.propTypes = {
+  setDifficulty: React.PropTypes.func
+};
+
 @autobind
 class DifficultyForm extends React.Component {
   constructor() {
     super()
     this.state = {difficulty: 'beginner'}
   }
+
   setDifficulty(e) {
     this.setState({difficulty: e.target.value});
+    this.props.setDifficulty(e.target.value)
   }
+
   render() {
     return(
       <form>
@@ -97,7 +113,7 @@ class GameBoard extends React.Component {
     _.times(height, h => {
       var widthArr = new Array();
       _.times(width, w => {
-        widthArr.push(val);
+        widthArr.push({isMine: val, isOpened: false});
       });
       arr.push(widthArr);
     })
@@ -115,14 +131,14 @@ class GameBoard extends React.Component {
     _.times(mineCount, function(mine) {
       var minePosY = parseInt(Math.random(height) * height);
       var minePosX = parseInt(Math.random(width) * width);
-      while(board[minePosY][minePosX] == 1) {
+      while(board[minePosY][minePosX]["isMine"] == 1) {
         minePosY = parseInt(Math.random(height) * height);
         minePosX = parseInt(Math.random(width) * width);
-        if(board[minePosY][minePosX] === 0) {
+        if(board[minePosY][minePosX]["isMine"] === 0) {
           break;
         }
       }
-      board[minePosY][minePosX] = 1;
+      board[minePosY][minePosX]["isMine"] = 1;
     });
 
     return board;
@@ -130,7 +146,7 @@ class GameBoard extends React.Component {
 
   checkMine(cell, row, cellIndex) {
     console.log(this.state.gameBoard[row][cellIndex]);
-    if(this.state.gameBoard[row][cellIndex] == 0) {
+    if(this.state.gameBoard[row][cellIndex]["isMine"] == 0) {
       this.state.gameBoard[row][cellIndex].showCell();
     }
   }
@@ -175,6 +191,12 @@ class GameBoard extends React.Component {
     )
   }
 }
+GameBoard.defaultProps = {
+  gameBoard: [],
+  boardWidth: 0,
+  boardHeight: 0,
+  mineCount: 0
+}
 
 @autobind
 class GameRow extends React.Component {
@@ -206,11 +228,15 @@ class GameRow extends React.Component {
   }
 }
 
+GameRow.defaultProps = {
+  row: []
+}
+
 @autobind
 class GameCell extends React.Component {
   constructor() {
     super()
-    this.state = { opened: false };
+    this.state = { opened: false, isMine: false };
   }
   propTypes: {
     onClick: React.PropTypes.func
@@ -240,6 +266,10 @@ class GameCell extends React.Component {
   }
 }
 
+GameCell.defaultProps = {
+  opened: false,
+  isMine: false
+}
 // $("#difficulty").on("change", function() {
 //   var difficulty = setDifficulty($(this).val());
 //   // startGame();
