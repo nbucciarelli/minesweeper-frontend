@@ -1,66 +1,4 @@
 var _ = require('underscore');
-var gameBoard = [];
-
-function startGame(width, height, mineCount) {
-  gameBoard = setMines(createBoard(width, height, 0), mineCount);
-}
-
-function createBoard(width, height, val) {
-  var arr = new Array();
-  _.times(height, function(h) {
-    var widthArr = new Array();
-    _.times(width, function(w) {
-      widthArr.push(val);
-    });
-    arr.push(widthArr);
-  })
-  return arr;
-}
-
-function setMines(board, mineCount) {
-  // console.log(board);
-  var height = board.length;
-  console.log("Height:", height)
-  var width = board[0].length;
-  console.log("Width:", width)
-  // console.log(board);
-
-  _.times(mineCount, function(mine) {
-    var minePosY = parseInt(Math.random(height) * height);
-    var minePosX = parseInt(Math.random(width) * width);
-    while(board[minePosY][minePosX] == 1) {
-      minePosY = parseInt(Math.random(height) * height);
-      minePosX = parseInt(Math.random(width) * width);
-      if(board[minePosY][minePosX] === 0) {
-        break;
-      }
-    }
-    board[minePosY][minePosX] = 1;
-  });
-
-  // console.log(board);
-  return board;
-}
-
-function setDifficulty(difficulty) {
-  return {
-    'beginner': {
-      'boardWidth': 9,
-      'boardHeight': 9,
-      'mineCount': 10
-    },
-    'intermediate': {
-      'boardWidth': 16,
-      'boardHeight': 16,
-      'mineCount': 40
-    },
-    'advanced': {
-      'boardWidth': 30,
-      'boardHeight': 16,
-      'mineCount': 99
-    }
-  }[difficulty]
-}
 
 import React from "react";
 import ReactDOM from "react-dom";
@@ -68,35 +6,155 @@ import autobind from "autobind-decorator";
 
 require("./app.css");
 
+class App extends React.Component {
+  constructor() {
+    super()
+    // difficulty = this.setDifficulty($(this).val());
+    this.state = {boardWidth: 9, boardHeight: 9, mineCount: 9, difficulty: 'beginner'}
+  }
+
+  setDifficulty(difficulty) {
+    return {
+      'beginner': {
+        'boardWidth': 9,
+        'boardHeight': 9,
+        'mineCount': 10
+      },
+      'intermediate': {
+        'boardWidth': 16,
+        'boardHeight': 16,
+        'mineCount': 40
+      },
+      'advanced': {
+        'boardWidth': 30,
+        'boardHeight': 16,
+        'mineCount': 99
+      }
+    }[difficulty]
+  }
+
+  render() {
+    return(
+      <div>
+        <h1>Minesweeper</h1>
+        <DifficultyForm difficulty={this.state.difficulty}/>
+        <GameBoard
+          boardWidth={this.state.boardWidth}
+          boardHeight={this.state.mineCount}
+          mineCount={this.state.mineCount}/>
+      </div>
+    )
+  }
+}
+
+@autobind
+class DifficultyForm extends React.Component {
+  constructor() {
+    super()
+    this.state = {difficulty: 'beginner'}
+  }
+  setDifficulty(e) {
+    this.setState({difficulty: e.target.value});
+  }
+  render() {
+    return(
+      <form>
+        <div class="form-group">
+          <label for="difficulty">Difficulty</label>
+          <select class="form-control" id="difficulty" onChange={this.setDifficulty}>
+            <option value="beginner">Beginner - 9x9 - 10 Mines</option>
+            <option value="intermediate">Intermediate - 16x16 - 40 Mines</option>
+            <option value="advanced">Advanced - 16x30 - 99 Mines</option>
+          </select>
+        </div>
+
+      </form>
+
+    )
+  }
+}
+
 @autobind
 class GameBoard extends React.Component {
-  checkMine(row, cell) {
-    console.log(this.props.gameBoard[row][cell]);
-    if(this.props.gameBoard[row][cell] == 0) {
-      // show box
+  constructor() {
+    super()
+    console.log(this.props)
+    this.state = {gameBoard: [], boardWidth: 0, boardHeight: 0, mineCount: 0};
+  }
+
+  componentDidMount() {
+    var gameBoard = this.setMines(this.createBoard(this.props.boardWidth, this.props.boardHeight, 0), this.props.mineCount)
+    this.setState({gameBoard: gameBoard, boardWidth: this.props.boardWidth, boardHeight: this.props.boardHeight, mineCount: this.props.mineCount});
+    console.log(this.state);
+  }
+
+  // startGame(width, height, mineCount) {
+  //   return this.setMines(createBoard(width, height, 0), mineCount)
+  // }
+  //
+  createBoard(width, height, val) {
+    var arr = new Array();
+    _.times(height, h => {
+      var widthArr = new Array();
+      _.times(width, w => {
+        widthArr.push(val);
+      });
+      arr.push(widthArr);
+    })
+    return arr;
+  }
+
+  setMines(board, mineCount) {
+    // console.log(board);
+    var height = board.length;
+    console.log("Height:", height)
+    var width = board[0].length;
+    console.log("Width:", width)
+    // console.log(board);
+
+    _.times(mineCount, function(mine) {
+      var minePosY = parseInt(Math.random(height) * height);
+      var minePosX = parseInt(Math.random(width) * width);
+      while(board[minePosY][minePosX] == 1) {
+        minePosY = parseInt(Math.random(height) * height);
+        minePosX = parseInt(Math.random(width) * width);
+        if(board[minePosY][minePosX] === 0) {
+          break;
+        }
+      }
+      board[minePosY][minePosX] = 1;
+    });
+
+    return board;
+  }
+
+  checkMine(cell, row, cellIndex) {
+    console.log(this.state.gameBoard[row][cellIndex]);
+    if(this.state.gameBoard[row][cellIndex] == 0) {
+      this.state.gameBoard[row][cellIndex].showCell();
     }
   }
 
-  checkMineCount(cellProps) {
-    cellProps.cellIndex
-    cellProps.rowIndex;
-    this.checkMine(cellProps.rowIndex, cellProps.cellIndex);
+  checkMineCount(cell) {
+    // cellProps.cellIndex
+    // cellProps.rowIndex;
+    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex);
     //above
-    this.checkMine(cellProps.rowIndex+1, cellProps.cellIndex);
+    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex);
     //below
-    this.checkMine(cellProps.rowIndex-1, cellProps.cellIndex);
+    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex);
     //left
-    this.checkMine(cellProps.rowIndex, cellProps.cellIndex-1);
+    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex-1);
     //right
-    this.checkMine(cellProps.rowIndex, cellProps.cellIndex+1);
+    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex+1);
     //diagonal up right
-    this.checkMine(cellProps.rowIndex-1, cellProps.cellIndex+1);
+    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex+1);
     //diagonal up left
-    this.checkMine(cellProps.rowIndex-1, cellProps.cellIndex-1);
+    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex-1);
     //diagonal down left
-    this.checkMine(cellProps.rowIndex+1, cellProps.cellIndex-1);
+    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex-1);
     //diagonal down right
-    this.checkMine(cellProps.rowIndex+1, cellProps.cellIndex+1);
+    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex+1);
 
   }
   renderRow(row, index) {
@@ -109,7 +167,7 @@ class GameBoard extends React.Component {
     )
   }
   render() {
-    var board = this.props.gameBoard
+    var board = this.state.gameBoard
     return (
       <span>
         {board.map(this.renderRow)}
@@ -124,8 +182,8 @@ class GameRow extends React.Component {
     onClick: React.PropTypes.func
   }
 
-  clickCell(cellProps) {
-    this.props.onClick(cellProps)
+  clickCell(cell) {
+    this.props.onClick(cell)
   }
   renderCell(cell, index) {
     return (
@@ -150,12 +208,20 @@ class GameRow extends React.Component {
 
 @autobind
 class GameCell extends React.Component {
+  constructor() {
+    super()
+    this.state = { opened: false };
+  }
   propTypes: {
     onClick: React.PropTypes.func
   }
-  clickCell(e) {
+  showCell() {
     this.setState({opened  : true})
-    this.props.onClick(this.props);
+  }
+
+  clickCell(e) {
+    this.showCell();
+    this.props.onClick(this);
     // if(!this.props.isMine) {
     //   console.log(this.props.actions)
     //   GameBoard.checkMineCount()
@@ -174,10 +240,11 @@ class GameCell extends React.Component {
   }
 }
 
-$("#difficulty").on("change", function() {
-  var difficulty = setDifficulty($(this).val());
-  startGame(difficulty.boardWidth, difficulty.boardHeight, difficulty.mineCount);
-  console.log($(this).val());
-  ReactDOM.render(<GameBoard gameBoard={gameBoard}/>,  document.getElementById('app'));
-});
-$("#difficulty").change();
+// $("#difficulty").on("change", function() {
+//   var difficulty = setDifficulty($(this).val());
+//   // startGame();
+//   console.log($(this).val());
+//   ReactDOM.render(<GameBoard gameBoard={gameBoard} boardWidth={difficulty.boardWidth} boardHeight={difficulty.mineCount} mineCount={difficulty.mineCount}/>,  document.getElementById('app'));
+// });
+// $("#difficulty").change();
+ReactDOM.render(<App />,  document.getElementById('app'));
