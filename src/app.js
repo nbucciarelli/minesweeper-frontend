@@ -83,9 +83,7 @@ class DifficultyForm extends React.Component {
             <option value="advanced">Advanced - 16x30 - 99 Mines</option>
           </select>
         </div>
-
       </form>
-
     )
   }
 }
@@ -94,20 +92,14 @@ class DifficultyForm extends React.Component {
 class GameBoard extends React.Component {
   constructor() {
     super()
-    console.log(this.props)
     this.state = {gameBoard: [], boardWidth: 0, boardHeight: 0, mineCount: 0};
   }
 
   componentDidMount() {
     var gameBoard = this.setMines(this.createBoard(this.props.boardWidth, this.props.boardHeight, 0), this.props.mineCount)
     this.setState({gameBoard: gameBoard, boardWidth: this.props.boardWidth, boardHeight: this.props.boardHeight, mineCount: this.props.mineCount});
-    console.log(this.state);
   }
 
-  // startGame(width, height, mineCount) {
-  //   return this.setMines(createBoard(width, height, 0), mineCount)
-  // }
-  //
   createBoard(width, height, val) {
     var arr = new Array();
     _.times(height, h => {
@@ -200,13 +192,6 @@ GameBoard.defaultProps = {
 
 @autobind
 class GameRow extends React.Component {
-  propTypes: {
-    onClick: React.PropTypes.func
-  }
-
-  clickCell(cell) {
-    this.props.onClick(cell)
-  }
   renderCell(cell, index) {
     return (
       <GameCell
@@ -214,7 +199,7 @@ class GameRow extends React.Component {
         key={index}
         cellIndex={index}
         rowIndex={this.props.rowIndex}
-        onClick={this.clickCell}/>
+        onClick={this.props.onClick}/>
     )
   }
   render () {
@@ -238,9 +223,7 @@ class GameCell extends React.Component {
     super()
     this.state = { opened: false, isMine: false };
   }
-  propTypes: {
-    onClick: React.PropTypes.func
-  }
+
   showCell() {
     this.setState({opened  : true})
   }
