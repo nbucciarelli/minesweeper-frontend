@@ -42,55 +42,28 @@ class GameBoard extends React.Component {
     _.times(mineCount, function(mine) {
       var minePosY = parseInt(Math.random(height) * height);
       var minePosX = parseInt(Math.random(width) * width);
-      while(board[minePosY][minePosX]["isMine"] == 1) {
+      while(board[minePosY][minePosX].isMine == 1) {
         minePosY = parseInt(Math.random(height) * height);
         minePosX = parseInt(Math.random(width) * width);
-        if(board[minePosY][minePosX]["isMine"] === 0) {
+        if(board[minePosY][minePosX].isMine === 0) {
           break;
         }
       }
-      board[minePosY][minePosX]["isMine"] = 1;
+      board[minePosY][minePosX].isMine = 1;
     });
 
     return board;
   }
 
-  checkMine(cell, row, cellIndex) {
-    console.log(this.props.gameBoard[row][cellIndex]);
-    if(this.props.gameBoard[row][cellIndex]["isMine"] == 0) {
-      this.props.gameBoard[row][cellIndex].showCell();
-    }
-  }
-
-  checkMineCount(cell) {
-    // cellProps.cellIndex
-    // cellProps.rowIndex;
-    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex);
-    //above
-    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex);
-    //below
-    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex);
-    //left
-    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex-1);
-    //right
-    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex+1);
-    //diagonal up right
-    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex+1);
-    //diagonal up left
-    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex-1);
-    //diagonal down left
-    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex-1);
-    //diagonal down right
-    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex+1);
-
-  }
   renderRow(row, index) {
     return(
       <GameRow
         row={row}
         key={index}
         rowIndex={index}
-        onClick={this.checkMineCount}/>
+        checkMineCount={this.props.checkMineCount}
+        initializeGameboard={this.props.initializeGameboard}
+        gameBoard={this.props.gameBoard}/>
     )
   }
   render() {

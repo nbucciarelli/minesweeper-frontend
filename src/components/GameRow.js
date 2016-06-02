@@ -8,11 +8,15 @@ class GameRow extends React.Component {
   renderCell(cell, index) {
     return (
       <GameCell
-        isMine={cell}
+        cell={cell}
+        isOpened={cell.isOpened}
+        isMine={cell.isMine}
         key={index}
         cellIndex={index}
         rowIndex={this.props.rowIndex}
-        onClick={this.props.onClick}/>
+        checkMineCount={this.props.checkMineCount}
+        initializeGameboard={this.props.initializeGameboard}
+        gameBoard={this.props.gameBoard}/>
     )
   }
   render () {

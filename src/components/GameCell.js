@@ -3,34 +3,32 @@ import autobind from "autobind-decorator";
 
 @autobind
 class GameCell extends React.Component {
-
-  showCell() {
-    this.setState({opened  : true})
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState != this.state) {
+      console.log("Redraw");
+      console.log(this.props.gameBoard);
+      this.props.initializeGameboard(this.props.gameBoard);
+    }
   }
 
-  clickCell(e) {
-    this.showCell();
-    this.props.onClick(this);
-    // if(!this.props.isMine) {
-    //   console.log(this.props.actions)
-    //   GameBoard.checkMineCount()
-    // } else {
-    //   console.log("Game Over")
-    // }
+  clickCell() {
+    // this.showCell();
+    this.props.checkMineCount(this);
   }
-  isOpened() {
-    return ("hover-cell " + (this.state && this.state.opened == true ? 'cell-opened' : 'cell'))
+
+  classes() {
+    return ("hover-cell " + (this.props && this.props.isOpened == true ? 'cell-opened' : 'cell'))
   }
 
   render () {
     return (
-      <span className={this.isOpened()} onClick={this.clickCell}>&nbsp;</span>
+      <span className={this.classes()} onClick={this.clickCell}>&nbsp;</span>
     )
   }
 }
 
 GameCell.defaultProps = {
-  opened: false,
+  isOpened: false,
   isMine: false
 }
 

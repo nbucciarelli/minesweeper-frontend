@@ -22,6 +22,45 @@ class App extends React.Component {
     this.setState({gameBoard: gameBoard});
   }
 
+  checkMine(cell, row, cellIndex) {
+    // console.log(cell)
+    // console.log(row)
+    // console.log(cellIndex)
+    // console.log(this.props.gameBoard[row][cellIndex]);
+    if(this.state.gameBoard[row] &&
+        this.state.gameBoard[row][cellIndex] &&
+        this.state.gameBoard[row][cellIndex].isMine == 0) {
+
+      var gameBoard = this.state.gameBoard;
+      gameBoard[row][cellIndex].isOpened = true
+      this.initializeGameboard(gameBoard);
+    }
+  }
+
+  checkMineCount(cell) {
+    // cellProps.cellIndex
+    // cellProps.rowIndex;
+    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex);
+    //above
+    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex);
+    //below
+    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex);
+    //left
+    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex-1);
+    //right
+    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex+1);
+    //diagonal up right
+    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex+1);
+    //diagonal up left
+    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex-1);
+    //diagonal down left
+    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex-1);
+    //diagonal down right
+    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex+1);
+
+  }
+
+
   setDifficulty(difficulty) {
     var diff = {
       'beginner': {
@@ -61,7 +100,8 @@ class App extends React.Component {
           boardWidth={this.state.boardWidth}
           boardHeight={this.state.boardHeight}
           mineCount={this.state.mineCount}
-          initializeGameboard={this.initializeGameboard}/>
+          initializeGameboard={this.initializeGameboard}
+          checkMineCount={this.checkMineCount}/>
       </div>
     )
   }
