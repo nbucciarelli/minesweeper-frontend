@@ -76,30 +76,6 @@ class App extends React.Component {
     } else {
       return;
     }
-    // //above
-    // if(!this.checkMine(rowIndex+1, cellIndex && !this.hasVisited(rowIndex+1, cellIndex))) {
-    // }
-    // //below
-    // if(!this.checkMine(rowIndex-1, cellIndex && !this.hasVisited(rowIndex-2, cellIndex))) {
-    // }
-    // //left
-    // if(!this.checkMine(rowIndex, cellIndex-1 && !this.hasVisited(rowIndex, cellIndex-1))) {
-    // }
-    // //right
-    // if(!this.checkMine(rowIndex, cellIndex+1 && !this.hasVisited(rowIndex, cellIndex+1))) {
-    // }
-    // //diagonal up right
-    // if(!this.checkMine(rowIndex-1, cellIndex+1 && !this.hasVisited(rowIndex-1, cellIndex+1))) {
-    // }
-    // //diagonal up left
-    // if(!this.checkMine(rowIndex-1, cellIndex-1 && !this.hasVisited(rowIndex-1, cellIndex-1))) {
-    // }
-    // //diagonal down left
-    // if(!this.checkMine(rowIndex+1, cellIndex-1 && !this.hasVisited(rowIndex+1, cellIndex-1))) {
-    // }
-    // //diagonal down right
-    // if(!this.checkMine(rowIndex+1, cellIndex+1 && !this.hasVisited(rowIndex+1, cellIndex+1))) {
-    // }
   }
 
   hasVisited(rowIndex, cellIndex) {
@@ -139,12 +115,10 @@ class App extends React.Component {
     var gameBoard = this.state.gameBoard;
     gameBoard[cell.props.rowIndex][cell.props.cellIndex].isOpened = true
     var mineCount = this.checkMineCount(cell);
-    // console.log(mineCount);
     gameBoard[cell.props.rowIndex][cell.props.cellIndex].text = mineCount
     this.checkSurrounding(cell.props.rowIndex, cell.props.cellIndex, false);
     this.initializeGameboard(gameBoard);
   }
-
 
   setDifficulty(difficulty) {
     var diff = {
