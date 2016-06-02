@@ -114,7 +114,7 @@ class App extends React.Component {
     this.checkMine(cell.props.rowIndex, cell.props.cellIndex, true)
     var gameBoard = this.state.gameBoard;
     gameBoard[cell.props.rowIndex][cell.props.cellIndex].isOpened = true
-    var mineCount = this.checkMineCount(cell);
+    var mineCount = this.checkMineCount(cell.props.rowIndex, cell.props.cellIndex);
     gameBoard[cell.props.rowIndex][cell.props.cellIndex].text = mineCount
     this.checkSurrounding(cell.props.rowIndex, cell.props.cellIndex, false);
     this.initializeGameboard(gameBoard);
