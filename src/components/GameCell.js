@@ -3,12 +3,6 @@ import autobind from "autobind-decorator";
 
 @autobind
 class GameCell extends React.Component {
-  componentDidUpdate(prevProps, prevState) {
-    if(prevState != this.state) {
-      this.props.initializeGameboard(this.props.gameBoard);
-    }
-  }
-
   clickCell() {
     // this.showCell();
     this.props.clickCell(this);
@@ -36,4 +30,4 @@ GameCell.defaultProps = {
   text: "_"
 }
 
-module.exports = GameCell
+export default GameCell

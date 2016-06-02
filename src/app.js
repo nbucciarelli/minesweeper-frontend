@@ -6,12 +6,16 @@ import autobind from "autobind-decorator";
 require("./app.css");
 import GameBoard from "./components/GameBoard"
 import DifficultyForm from "./components/DifficultyForm"
+// import Timer from "react-timer"
+import Timer from './components/Timer'
+
+let OPTIONS = { prefix: 'seconds elapsed!', delay: 100}
 
 @autobind
 class App extends React.Component {
   constructor() {
     super()
-    this.state = {gameBoard: [], boardWidth: 0, boardHeight: 0, mineCount: 0, difficulty: ''}
+    this.state = {gameBoard: [], boardWidth: 0, boardHeight: 0, mineCount: 0, difficulty: '', timer: null}
   }
 
   componentWillMount() {
@@ -120,6 +124,15 @@ class App extends React.Component {
     this.initializeGameboard(gameBoard);
   }
 
+  finishGame() {
+    console.log(this.state.timer);
+  }
+
+  returnTime(timer) {
+    // console.log(timer.state.time);
+    this.setState({timer: timer})
+  }
+
   setDifficulty(difficulty) {
     var diff = {
       'beginner': {
@@ -153,6 +166,9 @@ class App extends React.Component {
         <DifficultyForm
           difficulty={this.state.difficulty}
           setDifficulty={this.setDifficulty}/>
+        <Timer
+          options={OPTIONS}
+          returnTime={this.returnTime}/>
         <GameBoard
           gameBoard={this.state.gameBoard}
           difficulty={this.state.difficulty}
@@ -161,6 +177,7 @@ class App extends React.Component {
           mineCount={this.state.mineCount}
           initializeGameboard={this.initializeGameboard}
           clickCell={this.clickCell}/>
+          <button onClick={this.finishGame}>Finish Game</button>
       </div>
     )
   }

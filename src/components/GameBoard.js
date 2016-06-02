@@ -62,7 +62,6 @@ class GameBoard extends React.Component {
         key={index}
         rowIndex={index}
         clickCell={this.props.clickCell}
-        initializeGameboard={this.props.initializeGameboard}
         gameBoard={this.props.gameBoard}/>
     )
   }
@@ -81,4 +80,4 @@ GameBoard.defaultProps = {
   boardHeight: 0,
   mineCount: 0
 }
-module.exports = GameBoard
+export default GameBoard

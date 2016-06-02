@@ -16,7 +16,6 @@ class GameRow extends React.Component {
         cellIndex={index}
         rowIndex={this.props.rowIndex}
         clickCell={this.props.clickCell}
-        initializeGameboard={this.props.initializeGameboard}
         gameBoard={this.props.gameBoard}/>
     )
   }
@@ -35,4 +34,4 @@ GameRow.defaultProps = {
   row: []
 }
 
-module.exports = GameRow
+export default GameRow
