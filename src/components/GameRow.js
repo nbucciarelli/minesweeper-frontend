@@ -11,10 +11,11 @@ class GameRow extends React.Component {
         cell={cell}
         isOpened={cell.isOpened}
         isMine={cell.isMine}
+        text={cell.text}
         key={index}
         cellIndex={index}
         rowIndex={this.props.rowIndex}
-        checkMineCount={this.props.checkMineCount}
+        clickCell={this.props.clickCell}
         initializeGameboard={this.props.initializeGameboard}
         gameBoard={this.props.gameBoard}/>
     )

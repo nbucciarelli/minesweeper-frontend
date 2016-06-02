@@ -10,11 +10,13 @@
   background-color: gray;
   border: 1px solid black
 }
-
 .cell-opened {
   display: inline-block;
   width:20px;
   height:20px;
   background-color: #d3d3d3;
   border: 1px solid black
+}
+.mine-cell {
+  background-color: orange;
 }

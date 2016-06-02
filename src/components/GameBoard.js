@@ -61,7 +61,7 @@ class GameBoard extends React.Component {
         row={row}
         key={index}
         rowIndex={index}
-        checkMineCount={this.props.checkMineCount}
+        clickCell={this.props.clickCell}
         initializeGameboard={this.props.initializeGameboard}
         gameBoard={this.props.gameBoard}/>
     )

@@ -22,42 +22,127 @@ class App extends React.Component {
     this.setState({gameBoard: gameBoard});
   }
 
-  checkMine(cell, row, cellIndex) {
-    // console.log(cell)
-    // console.log(row)
-    // console.log(cellIndex)
-    // console.log(this.props.gameBoard[row][cellIndex]);
-    if(this.state.gameBoard[row] &&
-        this.state.gameBoard[row][cellIndex] &&
-        this.state.gameBoard[row][cellIndex].isMine == 0) {
+  checkMineCount(rowIndex, cellIndex) {
+    var mineCount = 0;
+    mineCount += this.checkMine(rowIndex, cellIndex);
+    //above
+    mineCount += this.checkMine(rowIndex+1, cellIndex);
+    //below
+    mineCount += this.checkMine(rowIndex-1, cellIndex);
+    //left
+    mineCount += this.checkMine(rowIndex, cellIndex-1);
+    //right
+    mineCount += this.checkMine(rowIndex, cellIndex+1);
+    //diagonal up right
+    mineCount += this.checkMine(rowIndex-1, cellIndex+1);
+    //diagonal up left
+    mineCount += this.checkMine(rowIndex-1, cellIndex-1);
+    //diagonal down left
+    mineCount += this.checkMine(rowIndex+1, cellIndex-1);
+    //diagonal down right
+    mineCount += this.checkMine(rowIndex+1, cellIndex+1);
+    return mineCount;
+  }
 
-      var gameBoard = this.state.gameBoard;
-      gameBoard[row][cellIndex].isOpened = true
-      this.initializeGameboard(gameBoard);
+  checkSurrounding(rowIndex, cellIndex) {
+    // console.log(this.state.gameBoard[rowIndex][cellIndex].visited);
+    if(
+      !this.checkMine(rowIndex, cellIndex) &&
+      !this.hasVisited(rowIndex, cellIndex) &&
+      rowIndex <= this.state.gameBoard.length &&
+      cellIndex <= this.state.gameBoard[0].length &&
+      this.checkMineCount(rowIndex, cellIndex) == 0
+    ){
+      this.state.gameBoard[rowIndex][cellIndex].visited = true
+
+      this.reveal(rowIndex, cellIndex)
+      this.reveal(rowIndex+1, cellIndex)
+      this.reveal(rowIndex-1, cellIndex)
+      this.reveal(rowIndex, cellIndex-1)
+      this.reveal(rowIndex, cellIndex+1)
+      this.reveal(rowIndex-1, cellIndex+1)
+      this.reveal(rowIndex-1, cellIndex-1)
+      this.reveal(rowIndex+1, cellIndex-1)
+      this.reveal(rowIndex+1, cellIndex+1)
+
+      this.checkSurrounding(rowIndex+1, cellIndex)
+      this.checkSurrounding(rowIndex-1, cellIndex)
+      this.checkSurrounding(rowIndex, cellIndex-1)
+      this.checkSurrounding(rowIndex, cellIndex+1)
+      this.checkSurrounding(rowIndex-1, cellIndex+1)
+      this.checkSurrounding(rowIndex-1, cellIndex-1)
+      this.checkSurrounding(rowIndex+1, cellIndex-1)
+      this.checkSurrounding(rowIndex+1, cellIndex+1)
+    } else {
+      return;
+    }
+    // //above
+    // if(!this.checkMine(rowIndex+1, cellIndex && !this.hasVisited(rowIndex+1, cellIndex))) {
+    // }
+    // //below
+    // if(!this.checkMine(rowIndex-1, cellIndex && !this.hasVisited(rowIndex-2, cellIndex))) {
+    // }
+    // //left
+    // if(!this.checkMine(rowIndex, cellIndex-1 && !this.hasVisited(rowIndex, cellIndex-1))) {
+    // }
+    // //right
+    // if(!this.checkMine(rowIndex, cellIndex+1 && !this.hasVisited(rowIndex, cellIndex+1))) {
+    // }
+    // //diagonal up right
+    // if(!this.checkMine(rowIndex-1, cellIndex+1 && !this.hasVisited(rowIndex-1, cellIndex+1))) {
+    // }
+    // //diagonal up left
+    // if(!this.checkMine(rowIndex-1, cellIndex-1 && !this.hasVisited(rowIndex-1, cellIndex-1))) {
+    // }
+    // //diagonal down left
+    // if(!this.checkMine(rowIndex+1, cellIndex-1 && !this.hasVisited(rowIndex+1, cellIndex-1))) {
+    // }
+    // //diagonal down right
+    // if(!this.checkMine(rowIndex+1, cellIndex+1 && !this.hasVisited(rowIndex+1, cellIndex+1))) {
+    // }
+  }
+
+  hasVisited(rowIndex, cellIndex) {
+    if(this.state.gameBoard[rowIndex] &&
+        this.state.gameBoard[rowIndex][cellIndex]) {
+        return this.state.gameBoard[rowIndex][cellIndex].visited;
+    } else {
+      return true;
     }
   }
 
-  checkMineCount(cell) {
-    // cellProps.cellIndex
-    // cellProps.rowIndex;
-    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex);
-    //above
-    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex);
-    //below
-    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex);
-    //left
-    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex-1);
-    //right
-    this.checkMine(cell, cell.props.rowIndex, cell.props.cellIndex+1);
-    //diagonal up right
-    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex+1);
-    //diagonal up left
-    this.checkMine(cell, cell.props.rowIndex-1, cell.props.cellIndex-1);
-    //diagonal down left
-    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex-1);
-    //diagonal down right
-    this.checkMine(cell, cell.props.rowIndex+1, cell.props.cellIndex+1);
+  reveal(rowIndex, cellIndex) {
+    var gameBoard = this.state.gameBoard;
+    if(this.state.gameBoard[rowIndex] &&
+        this.state.gameBoard[rowIndex][cellIndex]) {
+      var mineCount = this.checkMineCount(rowIndex, cellIndex);
+      // console.log(mineCount);
+      gameBoard[rowIndex][cellIndex].text = mineCount
+      gameBoard[rowIndex][cellIndex].isOpened = true
+    }
+  }
 
+  checkMine(rowIndex, cellIndex) {
+    if(this.state.gameBoard[rowIndex] &&
+        this.state.gameBoard[rowIndex][cellIndex] &&
+        this.state.gameBoard[rowIndex][cellIndex].isMine == 1) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  clickCell(cell, visited, mineNum) {
+    var rowIndex = cell.props.rowIndex
+    var cellIndex = cell.props.cellIndex
+    this.checkMine(cell.props.rowIndex, cell.props.cellIndex, true)
+    var gameBoard = this.state.gameBoard;
+    gameBoard[cell.props.rowIndex][cell.props.cellIndex].isOpened = true
+    var mineCount = this.checkMineCount(cell);
+    // console.log(mineCount);
+    gameBoard[cell.props.rowIndex][cell.props.cellIndex].text = mineCount
+    this.checkSurrounding(cell.props.rowIndex, cell.props.cellIndex, false);
+    this.initializeGameboard(gameBoard);
   }
 
 
@@ -101,7 +186,7 @@ class App extends React.Component {
           boardHeight={this.state.boardHeight}
           mineCount={this.state.mineCount}
           initializeGameboard={this.initializeGameboard}
-          checkMineCount={this.checkMineCount}/>
+          clickCell={this.clickCell}/>
       </div>
     )
   }
