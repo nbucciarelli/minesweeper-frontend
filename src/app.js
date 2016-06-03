@@ -6,12 +6,12 @@ import autobind from "autobind-decorator";
 require("./app.css");
 import GameBoard from "./components/GameBoard"
 import DifficultyForm from "./components/DifficultyForm"
-// import Timer from "react-timer"
 import Timer from './components/Timer'
+import Highscores from "./components/Highscores"
 
 const shortid = require('shortid')
 const PouchDB = require('pouchdb')
-let db = new PouchDB('highscores', { revs_limit: 1, auto_compaction: true })
+let db = new PouchDB('highscores')
 
 let OPTIONS = { prefix: 'seconds elapsed!', delay: 100}
 
@@ -19,7 +19,16 @@ let OPTIONS = { prefix: 'seconds elapsed!', delay: 100}
 class App extends React.Component {
   constructor() {
     super()
-    this.state = {gameBoard: [], boardWidth: 0, boardHeight: 0, mineCount: 0, difficulty: '', timer: null}
+    this.state = {
+      gameBoard: [],
+      boardWidth: 0,
+      boardHeight: 0,
+      mineCount: 0,
+      difficulty: '',
+      timer: null,
+      highscores: []
+    }
+    this.getScores()
   }
 
   componentWillMount() {
@@ -130,36 +139,37 @@ class App extends React.Component {
 
   finishGame() {
     let name = prompt("Name:")
-    console.log(test)
-    db.put({
-      _id: shortid.generate(),
-      name: name,
-      time: this.state.timer.state.time })
+    let newScore = {
+      playerName: name,
+      playerTime: this.state.timer.state.time }
+    db.put(newScore, shortid.generate())
       .then( doc => {
-        console.log(doc);
-        // return db.get(doc._id)
+        this.getScores()
       })
       .catch( err => {
         console.log("Error", err);
       })
   }
 
-  getHighScores() {
-    console.log("wut");
-    db.allDocs()
+  getScores() {
+    let x = this
+    db.allDocs({include_docs: true})
       .then(doc => {
-        console.log(doc)
-        doc.rows.map(row => {console.log(row)})
-        return db.get(doc);
+        x.setHighScores(doc.rows)
       })
       .catch(err => {
-        console.log(err)
+        console.log("Error", err)
       })
   }
 
   returnTime(timer) {
-    // console.log(timer.state.time);
     this.setState({timer: timer})
+  }
+
+  setHighScores(scores) {
+    this.setState({
+      highscores: scores.map(score => {return score.doc})
+    });
   }
 
   setDifficulty(difficulty) {
@@ -206,8 +216,10 @@ class App extends React.Component {
           mineCount={this.state.mineCount}
           initializeGameboard={this.initializeGameboard}
           clickCell={this.clickCell}/>
-          <button onClick={this.finishGame}>Finish Game</button>
-          <button onClick={this.getHighScores}>High Scores</button>
+        <button onClick={this.finishGame}>Finish Game</button>
+        <button onClick={this.getScores}>High Scores</button>
+        <Highscores
+          highscores={this.state.highscores} />
       </div>
     )
   }
