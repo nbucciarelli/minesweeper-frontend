@@ -9,6 +9,10 @@ import DifficultyForm from "./components/DifficultyForm"
 // import Timer from "react-timer"
 import Timer from './components/Timer'
 
+const shortid = require('shortid')
+const PouchDB = require('pouchdb')
+let db = new PouchDB('highscores', { revs_limit: 1, auto_compaction: true })
+
 let OPTIONS = { prefix: 'seconds elapsed!', delay: 100}
 
 @autobind
@@ -97,7 +101,7 @@ class App extends React.Component {
         this.state.gameBoard[rowIndex][cellIndex]) {
       var mineCount = this.checkMineCount(rowIndex, cellIndex);
       // console.log(mineCount);
-      gameBoard[rowIndex][cellIndex].text = mineCount
+      if(mineCount > 0) gameBoard[rowIndex][cellIndex].text = mineCount
       gameBoard[rowIndex][cellIndex].isOpened = true
     }
   }
@@ -119,13 +123,38 @@ class App extends React.Component {
     var gameBoard = this.state.gameBoard;
     gameBoard[cell.props.rowIndex][cell.props.cellIndex].isOpened = true
     var mineCount = this.checkMineCount(cell.props.rowIndex, cell.props.cellIndex);
-    gameBoard[cell.props.rowIndex][cell.props.cellIndex].text = mineCount
+    if(mineCount > 0) gameBoard[cell.props.rowIndex][cell.props.cellIndex].text = mineCount
     this.checkSurrounding(cell.props.rowIndex, cell.props.cellIndex, false);
     this.initializeGameboard(gameBoard);
   }
 
   finishGame() {
-    console.log(this.state.timer);
+    let name = prompt("Name:")
+    console.log(test)
+    db.put({
+      _id: shortid.generate(),
+      name: name,
+      time: this.state.timer.state.time })
+      .then( doc => {
+        console.log(doc);
+        // return db.get(doc._id)
+      })
+      .catch( err => {
+        console.log("Error", err);
+      })
+  }
+
+  getHighScores() {
+    console.log("wut");
+    db.allDocs()
+      .then(doc => {
+        console.log(doc)
+        doc.rows.map(row => {console.log(row)})
+        return db.get(doc);
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   returnTime(timer) {
@@ -178,6 +207,7 @@ class App extends React.Component {
           initializeGameboard={this.initializeGameboard}
           clickCell={this.clickCell}/>
           <button onClick={this.finishGame}>Finish Game</button>
+          <button onClick={this.getHighScores}>High Scores</button>
       </div>
     )
   }
