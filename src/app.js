@@ -169,7 +169,14 @@ class App extends React.Component {
   setHighScores(scores) {
     this.setState({
       highscores: scores.map(score => {return score.doc})
+                    .sort((a, b) => {
+                      return this.timeToInteger(a.playerTime) - this.timeToInteger(b.playerTime)
+                    })
     });
+  }
+
+  timeToInteger(time) {
+    return parseInt(time.split(":")[0] * 60) + parseInt(time.split(":")[1])
   }
 
   setDifficulty(difficulty) {
