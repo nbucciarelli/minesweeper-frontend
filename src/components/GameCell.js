@@ -5,21 +5,29 @@ import autobind from "autobind-decorator";
 class GameCell extends React.Component {
   clickCell() {
     // this.showCell();
-    this.props.clickCell(this);
+    if(!this.props.flag) this.props.clickCell(this);
   }
 
   classes() {
     return (
-      "hover-cell " +
+      "a" + this.props.text +
+      " hover-cell " +
       (this.props && this.props.isOpened == true ? 'cell-opened' : 'cell') +
       " " +
-      (this.props && this.props.isMine == true ? 'mine-cell' : '')
+      (this.props && this.props.isMine == true ? 'mine-cell' : '') +
+      " " +
+      (this.props && this.props.flag == true ? 'flag' : '')
     )
+  }
+
+  onContextMenu(e) {
+    e.preventDefault()
+    if(!this.props.isOpened) this.props.onContextMenu(this)
   }
 
   render () {
     return (
-      <span className={this.classes()} onClick={this.clickCell}>{this.props.text}</span>
+      <span className={this.classes()} onClick={this.clickCell} onContextMenu={this.onContextMenu}>{this.props.text}</span>
     )
   }
 }

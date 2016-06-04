@@ -54,7 +54,6 @@ class GameBoard extends React.Component {
 
     return board;
   }
-
   renderRow(row, index) {
     return(
       <GameRow
@@ -62,7 +61,8 @@ class GameBoard extends React.Component {
         key={index}
         rowIndex={index}
         clickCell={this.props.clickCell}
-        gameBoard={this.props.gameBoard}/>
+        gameBoard={this.props.gameBoard}
+        onContextMenu={this.props.rightClickCell}/>
     )
   }
   render() {

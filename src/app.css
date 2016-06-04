@@ -8,15 +8,30 @@
   width:20px;
   height:20px;
   background-color: gray;
-  border: 1px solid black
+  border: 1px solid black;
+  text-align: center;
 }
 .cell-opened {
   display: inline-block;
   width:20px;
   height:20px;
   background-color: #d3d3d3;
-  border: 1px solid black
+  border: 1px solid black;
+  text-align: center;
 }
 .mine-cell {
   background-color: orange;
+}
+
+.flag {
+  color: red;
+}
+.a1 {
+  color: blue;
+}
+.a2 {
+  color: green;
+}
+.a3,.a4,.a5,.a6,.a7,.a8 {
+  color: red;
 }

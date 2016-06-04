@@ -128,27 +128,52 @@ class App extends React.Component {
   clickCell(cell, visited, mineNum) {
     var rowIndex = cell.props.rowIndex
     var cellIndex = cell.props.cellIndex
-    this.checkMine(cell.props.rowIndex, cell.props.cellIndex, true)
+    var isMine = this.checkMine(cell.props.rowIndex, cell.props.cellIndex, true)
     var gameBoard = this.state.gameBoard;
     gameBoard[cell.props.rowIndex][cell.props.cellIndex].isOpened = true
     var mineCount = this.checkMineCount(cell.props.rowIndex, cell.props.cellIndex);
     if(mineCount > 0) gameBoard[cell.props.rowIndex][cell.props.cellIndex].text = mineCount
     this.checkSurrounding(cell.props.rowIndex, cell.props.cellIndex, false);
+    if(isMine) {
+      this.finishGame()
+      this.resetGame();
+    }
+    this.initializeGameboard(gameBoard);
+  }
+
+  resetGame() {
+    this.setDifficulty('beginner');
+  }
+
+  rightClickCell(cell) {
+    var gameBoard = this.state.gameBoard;
+    gameBoard[cell.props.rowIndex][cell.props.cellIndex].flag = true
+    gameBoard[cell.props.rowIndex][cell.props.cellIndex].text = 'X'
+    this.initializeGameboard(gameBoard);
+  }
+
+  revealMines() {
+    var gameBoard = this.state.gameBoard;
+    var mineCells = gameBoard.reduce((a, b) => a.concat(b)).filter((cell) => { return cell.isMine})
+    mineCells.map((cell) => { cell.text = '*' })
     this.initializeGameboard(gameBoard);
   }
 
   finishGame() {
-    let name = prompt("Name:")
-    let newScore = {
-      playerName: name,
-      playerTime: this.state.timer.state.time }
-    db.put(newScore, shortid.generate())
-      .then( doc => {
-        this.getScores()
-      })
-      .catch( err => {
-        console.log("Error", err);
-      })
+    this.revealMines()
+    setTimeout(() => {
+      let name = prompt("Name:")
+      let newScore = {
+        playerName: name,
+        playerTime: this.state.timer.state.time }
+      db.put(newScore, shortid.generate())
+        .then( doc => {
+          this.getScores()
+        })
+        .catch( err => {
+          console.log("Error", err);
+        })
+    }, 500)
   }
 
   getScores() {
@@ -222,9 +247,8 @@ class App extends React.Component {
           boardHeight={this.state.boardHeight}
           mineCount={this.state.mineCount}
           initializeGameboard={this.initializeGameboard}
-          clickCell={this.clickCell}/>
-        <button onClick={this.finishGame}>Finish Game</button>
-        <button onClick={this.getScores}>High Scores</button>
+          clickCell={this.clickCell}
+          rightClickCell={this.rightClickCell}/>
         <Highscores
           highscores={this.state.highscores} />
       </div>
