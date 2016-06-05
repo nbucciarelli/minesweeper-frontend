@@ -7,7 +7,7 @@
 
 ### Goals
 
-- Training in palmetto flow
+- Training in [Palmetto Flow](https://github.com/twilson63/palmettoflow)
 - Training in functional programming
 
 ### Todo
