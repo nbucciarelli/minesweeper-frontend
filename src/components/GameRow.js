@@ -18,7 +18,7 @@ class GameRow extends React.Component {
         rowIndex={this.props.rowIndex}
         clickCell={this.props.clickCell}
         gameBoard={this.props.gameBoard}
-        onContextMenu={this.props.onContextMenu}/>
+        initializeGameboard={this.props.initializeGameboard}/>
     )
   }
   render () {
